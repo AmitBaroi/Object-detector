@@ -28,7 +28,7 @@ ln = MODEL.getLayerNames()
 ln = [ln[i[0]-1] for i in MODEL.getUnconnectedOutLayers()]
 
 # Generate blob from input image, do forward pass with YOLO detector, give bounding boxes and probabilities
-blob = cv2.dnn.blobFromImage(image, 1/255, (416, 416), swapRB=True, crop=False)
+blob = cv2.dnn.blobFromImage(image, scalefactor=1/255, size=(416, 416), swapRB=True, crop=False)
 MODEL.setInput(blob)
 start = time.time()
 layer_outputs = MODEL.forward(ln)
