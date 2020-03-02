@@ -1,30 +1,27 @@
 import numpy as np
 import time
 import cv2
-import os
 from utils import *
+
+"""
+Detects objects in web-cam video feed and shows bounding boxes with class labels.
+"""
 
 np.random.seed(42)
 
 CONF = 0.5  # Confidence
 THRESH = 0.3  # Threshold
-IMG_DIR = "images"  # Path to test image directory
 
 # Loading class labels and YOLOv3 model
 labels, model = load_yolo("yolo-coco")
 # Generating some colors for each class
 colors = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
-# List of images in image directory
-image_files = [os.path.join(IMG_DIR, file) for file in os.listdir(IMG_DIR)]
+# Accessing web-cam
+cap = cv2.VideoCapture(0)
 
-# Iterate over all files in image directory
-for image_path in image_files:
-    print("-" * 40)
-    print(f"Processing '{image_path}'...")
-    print("-" * 40)
-
-    # Reading in image as numpy array
-    image = cv2.imread(image_path)
+while True:
+    # Reading in each frame as an image
+    _, image = cap.read()
     # Image height (H) and width (W)
     (H, W) = image.shape[:2]
 
@@ -44,9 +41,7 @@ for image_path in image_files:
     confidences = []
     class_ids = []
     # Iterate over each of layer_outputs and draw prediction and bbox on output image
-    print(f"Length of 'layer_outputs': {len(layer_outputs)}")
     for i, output in enumerate(layer_outputs):
-        print(f"Number of detections in output layer {i}: {len(output)}")
         # Iterate over each of the detections
         for detection in output:
             scores = detection[5:]  # Class probabilities
@@ -84,7 +79,10 @@ for image_path in image_files:
             cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
     # Display output image
-    cv2.imshow(f"Image: {os.path.split(image_path)[1]}", image)
-    cv2.waitKey(0)
+    cv2.imshow(f"Live object detection", image)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
 
-# TODO: cleanup code to make it more organized and modular
+# Release web-cam & destroy windows
+cap.release()
+cv2.destroyAllWindows()
