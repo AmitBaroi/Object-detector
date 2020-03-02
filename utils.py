@@ -13,8 +13,8 @@ def load_yolo(directory, verbose=0):
 
     # Model
     from cv2.dnn import readNetFromDarknet
-    config_path = f"{directory}/yolov3.cfg"
-    weight_path = f"{directory}/yolov3.weights"
+    config_path = f"{directory}/yolov2-tiny.cfg"
+    weight_path = f"{directory}/yolov2-tiny.weights"
     if verbose > 0:
         print(f"Loading YOLOv3 model (config: '{config_path}', weights: '{weight_path}')...")
     net = readNetFromDarknet(cfgFile=config_path, darknetModel=weight_path)
