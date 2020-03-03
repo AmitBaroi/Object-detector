@@ -7,6 +7,7 @@ The COCO dataset contains 80 different object classes. The names of the object c
 ![](detection.png)
 
 To run the program, download this repository as a zip or clone it. 
+Then download the [coco.names](), YOLO [config]() and [weights]() files and place them inside a folder named **"yolo-coco"** inside the **Object-detector-master** directory.
 Then open the terminal inside the **Object-detector-master** folder and enter the following command:
 `python yolo.py`. Then select the option to detect objects in images or webcam feed.
 
