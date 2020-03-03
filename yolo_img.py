@@ -12,6 +12,10 @@ IMG_DIR = "images"  # Path to test image directory
 
 # Loading class labels and YOLO model
 labels, model = load_yolo("yolo-coco")
+# Output layer names needed from YOLO
+ln = model.getLayerNames()
+print("Layers in model", len(ln))
+ln = [ln[i[0] - 1] for i in model.getUnconnectedOutLayers()]
 # Generating some colors for each class
 colors = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
 # List of images in image directory
@@ -27,11 +31,6 @@ for image_path in image_files:
     image = cv2.imread(image_path)
     # Image height (H) and width (W)
     (H, W) = image.shape[:2]
-
-    # Output layer names needed from YOLO
-    ln = model.getLayerNames()
-    print("Layers in model", len(ln))
-    ln = [ln[i[0] - 1] for i in model.getUnconnectedOutLayers()]
 
     # Generate blob from input image, do forward pass with YOLO detector, give bounding boxes and probabilities
     blob = cv2.dnn.blobFromImage(image, scalefactor=1 / 255, size=(416, 416), swapRB=True, crop=False)

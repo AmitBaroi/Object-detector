@@ -14,6 +14,9 @@ THRESH = 0.3  # Threshold
 
 # Loading class labels and YOLO model
 labels, model = load_yolo("yolo-coco")
+# Output layer names needed from YOLO
+ln = model.getLayerNames()
+ln = [ln[i[0] - 1] for i in model.getUnconnectedOutLayers()]
 # Generating some colors for each class
 colors = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
 # Accessing web-cam
@@ -24,10 +27,6 @@ while True:
     _, image = cap.read()
     # Image height (H) and width (W)
     (H, W) = image.shape[:2]
-
-    # Output layer names needed from YOLO
-    ln = model.getLayerNames()
-    ln = [ln[i[0] - 1] for i in model.getUnconnectedOutLayers()]
 
     # Generate blob from input image, do forward pass with YOLO detector, give bounding boxes and probabilities
     blob = cv2.dnn.blobFromImage(image, scalefactor=1 / 255, size=(416, 416), swapRB=True, crop=False)
