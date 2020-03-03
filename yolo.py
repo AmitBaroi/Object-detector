@@ -10,10 +10,6 @@ CONF = 0.5  # Confidence
 THRESH = 0.3  # Threshold
 MODEL_DIR = "yolo-coco"
 IMG_DIR = "images"
-MODE = input("""Select object detection mode:
-- images
-- webcam
->>> """).lower()
 
 # Loading class labels and YOLO model
 labels, model = load_yolo(MODEL_DIR)
@@ -22,6 +18,14 @@ ln = model.getLayerNames()
 out_layers = [ln[i[0] - 1] for i in model.getUnconnectedOutLayers()]
 # Generating some colors for each class
 colors = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
+
+MODE = input("""Select object detection mode:
+- images
+- webcam
+>>> """).lower()
+WRITE = True if str(input("Write detection video to file? (y/n)\n>>> ")).lower() == "y" else False
+if WRITE:
+    print("[INFO] DETECTIONS WILL BE SAVED TO FILE!")
 
 if MODE in ["images", "image"]:
     file_names = os.listdir(IMG_DIR)
@@ -79,10 +83,18 @@ elif MODE in ["webcam", "web-cam"]:
 
         # Display output image
         cv2.imshow(f"Live object detection", image)
+
+        # If we are supposed to write detections to file
+        if WRITE:
+            fourcc = cv2.VideoWriter_fourcc(*"XVID")
+            out = cv2.VideoWriter("output.avi", fourcc, 20.0, (640, 480))
+            out.write(image)
+
+        # Press Q to quit program
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    cap.release()
+    cap.release()   # Release video capture
 else:
     print("INVALID INPUT!")
 
