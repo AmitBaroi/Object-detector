@@ -26,6 +26,8 @@ MODE = input("""Select object detection mode:
 WRITE = True if str(input("Write detection video to file? (y/n)\n>>> ")).lower() == "y" else False
 if WRITE:
     print("[INFO] DETECTIONS WILL BE SAVED TO FILE!")
+    fourcc = cv2.VideoWriter_fourcc(*"XVID")
+    out = cv2.VideoWriter("detections.avi", fourcc, 10, (640, 480))
 
 if MODE in ["images", "image"]:
     file_names = os.listdir(IMG_DIR)
@@ -53,8 +55,15 @@ if MODE in ["images", "image"]:
         cv2.imshow(f"Image: {os.path.split(image_path)[1]}", image)
         cv2.waitKey(0)
 elif MODE in ["webcam", "web-cam"]:
+    # Capture web-cam feed
     cap = cv2.VideoCapture(0)
     while cap.isOpened():
+        fps = int(cap.get(cv2.CAP_PROP_FPS))
+        f_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        f_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        print("\nFPS: \t", fps)
+        print(f"Frame shape: {f_w}x{f_h}")
+        print("-"*35)
         # Reading in each frame as an image
         _, image = cap.read()
         # Image height and width
@@ -86,8 +95,6 @@ elif MODE in ["webcam", "web-cam"]:
 
         # If we are supposed to write detections to file
         if WRITE:
-            fourcc = cv2.VideoWriter_fourcc(*"XVID")
-            out = cv2.VideoWriter("output.avi", fourcc, 20.0, (640, 480))
             out.write(image)
 
         # Press Q to quit program
