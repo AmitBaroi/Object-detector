@@ -4,7 +4,7 @@ def load_yolo(directory, verbose=0):
     tuple containing a list of class classes and the model.
     """
     # Class classes
-    class_path = f"{directory}/coco.names"
+    class_path = f"{directory}/voc.names"
     if verbose > 0:
         print(f"Loading class labels from '{class_path}'...")
     classes = open(class_path).read().strip().split("\n")
