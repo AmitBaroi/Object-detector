@@ -50,7 +50,7 @@ if MODE in ["images", "image"]:
         cv2.waitKey(0)
 elif MODE in ["webcam", "web-cam"]:
     cap = cv2.VideoCapture(0)
-    while True:
+    while cap.isOpened():
         # Reading in each frame as an image
         _, image = cap.read()
         # Image height and width
@@ -63,7 +63,19 @@ elif MODE in ["webcam", "web-cam"]:
         ids = cv2.dnn.NMSBoxes(bboxes=boxes, scores=confidences, score_threshold=CONF, nms_threshold=THRESH)
         print(f"Detections kept after non-max suppression: {len(ids)}")
         # Drawing bounding boxes
-        image = draw_boxes(image, ids, boxes, confidences, colors, class_ids, labels)
+        # Ensuring at least one detection is present
+        if len(ids) > 0:
+            # Iterate over indexes
+            for i in ids.flatten():
+                # Bounding box coordinates
+                (x, y) = (boxes[i][0], boxes[i][1])
+                # Bounding box width, height
+                (w, h) = (boxes[i][2], boxes[i][3])
+                # Draw bounding box rectangle and label the image
+                color = [int(c) for c in colors[class_ids[i]]]
+                cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
+                text = f"{labels[class_ids[i]]}: {np.round(confidences[i], 6)}"
+                cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
         # Display output image
         cv2.imshow(f"Live object detection", image)
