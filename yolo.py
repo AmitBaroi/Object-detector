@@ -23,12 +23,6 @@ MODE = input("""Select object detection mode:
 - images
 - webcam
 >>> """).lower()
-WRITE = True if str(input("Write detection video to file? (y/n)\n>>> ")).lower() == "y" else False
-FPS = int(input("Enter FPS (frames per second) for recording: "))
-if WRITE:
-    print("[INFO] DETECTIONS WILL BE SAVED TO FILE!")
-    fourcc = cv2.VideoWriter_fourcc(*"XVID")
-    out = cv2.VideoWriter("detections.avi", fourcc, FPS, (640, 480))
 
 if MODE in ["images", "image"]:
     file_names = os.listdir(IMG_DIR)
@@ -56,6 +50,12 @@ if MODE in ["images", "image"]:
         cv2.imshow(f"Image: {os.path.split(image_path)[1]}", image)
         cv2.waitKey(0)
 elif MODE in ["webcam", "web-cam"]:
+    WRITE = True if str(input("Write detection video to file? (y/n)\n>>> ")).lower() == "y" else False
+    FPS = int(input("Enter FPS (frames per second) for recording: "))
+    if WRITE:
+        print("[INFO] DETECTIONS WILL BE SAVED TO FILE!")
+        fourcc = cv2.VideoWriter_fourcc(*"XVID")
+        out = cv2.VideoWriter("detections.avi", fourcc, FPS, (640, 480))
     # Capture web-cam feed
     cap = cv2.VideoCapture(0)
     while cap.isOpened():
