@@ -15,6 +15,6 @@ The COCO dataset contains 80 different object classes. The names of the object c
 
 ENJOY!
 
-**P.S:** you can also save the object detection video and specify the frame rate for the save file (FPS values of 10-30 have been tested).
-
-Alternatively, you could also run `yolo_img.py` or `yolo_cam.py` if you want.
+##### Note:
+- You can test the detector on your own custom images by just adding your images to the **Object-detector-master/images/** directory.
+- You can also save the object detection video and specify the frame rate for the save file (FPS values of 10-30 have been tested).
