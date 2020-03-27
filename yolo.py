@@ -13,10 +13,11 @@ IMG_DIR = "images"
 
 # Loading class labels and YOLO model
 labels, model = load_yolo(MODEL_DIR)
-# Output layer names needed from YOLO
+# All the layer names of the YOLO model
 ln = model.getLayerNames()
+# Only the output layer name(s)
 out_layers = [ln[i[0] - 1] for i in model.getUnconnectedOutLayers()]
-# Generating some colors for each class
+# Generating some random colors for each class
 colors = np.random.randint(0, 255, size=(len(labels), 3), dtype="uint8")
 
 MODE = input("""Select object detection mode:
