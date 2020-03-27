@@ -1,7 +1,8 @@
 .idea
 __pycache__
 videos/
-yolo-coco/
+models/
+yolo-coco/yolov2.weights
 yolo-voc/
 output.avi
 detection-vids
